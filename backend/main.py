@@ -26,7 +26,18 @@ groq_client = Groq(api_key=settings.groq_api_key)
 notion = notion_client.Client(auth=settings.notion_api_key)
 
 # --- 2. Middleware ---
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+# --- 2. Middleware ---
+origins = [
+    "http://localhost:3000",  # For local development
+    "https://momentum-ai-eight.vercel.app" # For your live app
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- 3. Pydantic Data Models ---
 class ActionItem(BaseModel): id: int; task: str; owner: list[str]; deadline: str | None = None
