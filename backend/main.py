@@ -28,9 +28,12 @@ notion = notion_client.Client(auth=settings.notion_api_key)
 # --- 2. Middleware ---
 # --- 2. Middleware ---
 origins = [
-    "http://localhost:3000",  # For local development
-    "https://momentum-ai-tutorial.vercel.app" # For your live app
+    "http://localhost:3000",
+    "https://momentum-ai-tutorial.vercel.app",
+    "https://momentum-ai-tutorial-git-main-agaazs-projects.vercel.app",
+    "https://momentum-ai-tutorial-7zyw6029q-agaazs-projects.vercel.app"
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
