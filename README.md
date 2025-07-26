@@ -45,12 +45,12 @@ Momentum AI is packed with advanced, agentic features designed to turn every mee
 
 ## 🛠️ Technology Stack
 
-| Component | Technology |
-| --- | --- |
-| **Frontend** | React.js |
-| **Backend**| Python (FastAPI) |
-| **LLM & Transcription** | Groq Cloud (Llama3, Whisper) |
-| **External APIs** | Notion API |
+| Component            | Technology                                                          |
+| -------------------- | ------------------------------------------------------------------- |
+| **Frontend** | React.js                                                            |
+| **Backend** | Python (FastAPI)                                                    |
+| **LLM & Transcription** | Groq Cloud (Llama3, Whisper)                                     |
+| **External APIs** | Notion API                                                          |
 
 ---
 
@@ -66,6 +66,7 @@ To run this project on your local machine, follow these steps.
 
 ### Backend Setup
 
+
 ```bash
 # 1. Navigate to the backend folder
 cd backend
@@ -74,8 +75,24 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
-# 3. Install dependencies from the requirements file
+# 3. Install dependencies
 pip install -r requirements.txt
 
 # 4. Run the server
-uvicorn main:app --reload
+uvicorn main:app --reload  
+```
+### Frontend Setup
+
+```bash
+# 1. Navigate to the frontend folder
+cd frontend
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm start
+```
+
+Once started, the application will be available at **[http://localhost:3000](http://localhost:3000)**.
+
