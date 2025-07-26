@@ -4,8 +4,6 @@ import './App.css';
 
 let nextId = 1000; // Start manual IDs high to avoid collisions
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-console.log("Connecting to API at:", API_URL); // <-- ADD THIS LINE
-
 
 function App() {
     // State for rich minutes
@@ -53,8 +51,7 @@ function App() {
         formData.append('file', selectedFile);
 
         try {
-            // THE FIX IS HERE: We must pass 'formData' as the second argument
-            const response = await axios.post('API_URL/process-meeting', formData, { 
+            const response = await axios.post(`${API_URL}/process-meeting`, formData, { 
                 headers: { 'Content-Type': 'multipart/form-data' } 
             });
             setDiscussionPoints(response.data.discussion_points); 
@@ -78,7 +75,7 @@ function App() {
     const handleNotionExport = async () => {
         setIsExporting(true); setNotionStatus('Exporting...');
         try {
-            await axios.post('API_URL/export-to-notion', {
+            await axios.post(`${API_URL}/export-to-notion`, {
                 overall_sentiment: overallSentiment, topics: topics,
                 discussion_points: discussionPoints, action_items: actionItems
             });
@@ -92,7 +89,7 @@ function App() {
         const question = userQuestion; const newHistory = [...chatHistory, { role: 'user', content: question }];
         setChatHistory(newHistory); setUserQuestion(''); setIsChatting(true);
         try {
-            const response = await axios.post('API_URL/chat', { question: question, transcript: fullTranscript });
+            const response = await axios.post(`${API_URL}/chat`, { question: question, transcript: fullTranscript });
             setChatHistory([...newHistory, { role: 'bot', content: response.data.answer }]);
         } catch (err) { setChatHistory([...newHistory, { role: 'bot', content: 'Sorry, I encountered an error.' }]); }
         setIsChatting(false);
@@ -189,7 +186,7 @@ function App() {
                             </div>
                             <div className="chat-column">
                                 <h2>Chat with Meeting History</h2>
-                                 <p className="subtitle">Ask questions about this meeting.</p>
+                                <p className="subtitle">Ask questions about this meeting.</p>
                                 <div className="chat-container">
                                     <div className="chat-history">{chatHistory.map((msg, index) => (<div key={index} className={`chat-message ${msg.role}`}>{msg.content}</div>))}<div ref={chatEndRef} /></div>
                                     <form onSubmit={handleChatSubmit} className="chat-form">
