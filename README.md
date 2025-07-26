@@ -12,11 +12,6 @@ This project is a submission for the **GenAI Agentic Bot Hackathon: Meeting Prod
 
 **[INSERT YOUR DEPLOYED APP LINK HERE]**
 
-## ✨ Sneak Peek
-
-![Momentum AI Screenshot](https://i.imgur.com/8Qp4a3h.png)
-*(Feel free to replace this with your own updated screenshot!)*
-
 ---
 
 ## 🌟 Key Features
@@ -50,12 +45,12 @@ Momentum AI is packed with advanced, agentic features designed to turn every mee
 
 ## 🛠️ Technology Stack
 
-| Component            | Technology                                                          |
-| -------------------- | ------------------------------------------------------------------- |
-| **Frontend** | React.js                                                            |
-| **Backend** | Python (FastAPI)                                                    |
-| **LLM & Transcription** | Groq Cloud (Llama3, Whisper)                                     |
-| **External APIs** | Notion API                                                          |
+| Component | Technology |
+| --- | --- |
+| **Frontend** | React.js |
+| **Backend**| Python (FastAPI) |
+| **LLM & Transcription** | Groq Cloud (Llama3, Whisper) |
+| **External APIs** | Notion API |
 
 ---
 
@@ -79,25 +74,8 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
-# 3. Install dependencies
+# 3. Install dependencies from the requirements file
 pip install -r requirements.txt
 
 # 4. Run the server
 uvicorn main:app --reload
-
-
-
-
-### Frontend Setup
-
-```bash
-# # 1. Navigate to the frontend folder
-cd frontend
-
-# 2. Install dependencies
-npm install
-
-# 3. Run the application
-npm start
-
-**The application will be available at `http://localhost:3000`.**
