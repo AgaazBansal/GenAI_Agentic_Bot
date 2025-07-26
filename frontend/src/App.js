@@ -4,6 +4,17 @@ import './App.css';
 
 let nextId = 1000; // Start manual IDs high to avoid collisions
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+origins = [
+    "http://localhost:3000",
+    "https://momentum-ai-tutorial.vercel.app"  
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 function App() {
     // State for rich minutes
