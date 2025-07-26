@@ -9,6 +9,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
 import notion_client
+from zoneinfo import ZoneInfo
 
 # --- 1. Configuration Management ---
 load_dotenv()
@@ -113,20 +114,41 @@ ai_service = AIService()
 
 # --- 5. Notion Service ---
 class NotionService:
-    # ... (This class is unchanged)
+    """Handles all interactions with the Notion API."""
     def export_minutes(self, data: FinalMinutes):
-        if not settings.notion_database_id: raise ValueError("Notion Database ID not configured.")
-        page_title = f"Meeting Minutes - {datetime.now().strftime('%Y-%m-%d %H:%M')}"; children = []
-        children.append({"heading_2": {"rich_text": [{"text": {"content": "Key Info"}}]}}); children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Overall Sentiment: {data.overall_sentiment}"}}]}}); children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Topics: {', '.join(data.topics)}"}}]}})
+        if not settings.notion_database_id:
+            raise ValueError("Notion Database ID not configured.")
+        
+        # --- THIS IS THE CORRECTED PART ---
+        # Get the current time in UTC, then convert it to the IST timezone
+        ist_time = datetime.now(ZoneInfo("UTC")).astimezone(ZoneInfo("Asia/Kolkata"))
+        page_title = f"Meeting Minutes - {ist_time.strftime('%Y-%m-%d %H:%M %Z')}" # Added %Z for timezone
+        
+        children = []
+        
+        # Build the content blocks for the Notion page
+        children.append({"heading_2": {"rich_text": [{"text": {"content": "Key Info"}}]}})
+        children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Overall Sentiment: {data.overall_sentiment}"}}]}})
+        children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Topics: {', '.join(data.topics)}"}}]}})
+
         if data.discussion_points:
             children.append({"heading_2": {"rich_text": [{"text": {"content": "Discussion Points"}}]}})
             for point in data.discussion_points:
-                children.append({"heading_3": {"rich_text": [{"text": {"content": point.topic}}]}}); children.append({"paragraph": {"rich_text": [{"text": {"content": point.summary}}]}})
+                children.append({"heading_3": {"rich_text": [{"text": {"content": point.topic}}]}})
+                children.append({"paragraph": {"rich_text": [{"text": {"content": point.summary}}]}})
+        
         if data.action_items:
             children.append({"heading_2": {"rich_text": [{"text": {"content": "Action Items"}}]}})
             for item in data.action_items:
-                owners = ", ".join(item.owner); task_text = f"{item.task} (Owner: {owners}, Deadline: {item.deadline or 'N/A'})"; children.append({"to_do": {"rich_text": [{"text": {"content": task_text}}], "checked": False}})
-        notion.pages.create(parent={"database_id": settings.notion_database_id}, properties={"title": {"title": [{"text": {"content": page_title}}]}}, children=children)
+                owners = ", ".join(item.owner)
+                task_text = f"{item.task} (Owner: {owners}, Deadline: {item.deadline or 'N/A'})"
+                children.append({"to_do": {"rich_text": [{"text": {"content": task_text}}], "checked": False}})
+        
+        notion.pages.create(
+            parent={"database_id": settings.notion_database_id},
+            properties={"title": {"title": [{"text": {"content": page_title}}]}},
+            children=children
+        )
 
 notion_service = NotionService()
 
