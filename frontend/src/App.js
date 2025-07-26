@@ -78,14 +78,25 @@ function App() {
     const handleNotionExport = async () => {
         setIsExporting(true); setNotionStatus('Exporting...');
         try {
-            await axios.post(`${API_URL}/export-to-notion`, {
-                overall_sentiment: overallSentiment, topics: topics,
-                discussion_points: discussionPoints, action_items: actionItems
-            });
-            setNotionStatus('✅ Successfully exported!');
-        } catch (err) { setNotionStatus('❌ Error exporting.'); }
-        setIsExporting(false);
+          // Capture the response from the backend
+          const response = await axios.post(`${API_URL}/export-to-notion`, {
+              overall_sentiment: overallSentiment,
+              topics: topics,
+              discussion_points: discussionPoints,
+              action_items: actionItems
+          });
+          // Create a clickable link in the success message
+          setNotionStatus(
+            <span>✅ Successfully exported! <a href={response.data.url} target="_blank" rel="noopener noreferrer">View in Notion</a></span>
+          );
+      } catch (err) {
+          setNotionStatus('❌ Error exporting.');
+      }
+      setIsExporting(false);
     };
+
+    
+    
 
     const handleChatSubmit = async (e) => {
         e.preventDefault(); if (!userQuestion.trim()) return;

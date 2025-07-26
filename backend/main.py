@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from groq import Groq
 import notion_client
 from zoneinfo import ZoneInfo
+from datetime import timedelta
 
 # --- 1. Configuration Management ---
 load_dotenv()
@@ -119,9 +120,10 @@ class NotionService:
         if not settings.notion_database_id:
             raise ValueError("Notion Database ID not configured.")
         
-        # This is the new timezone-aware logic
-        ist_time = datetime.now(ZoneInfo("UTC")).astimezone(ZoneInfo("Asia/Kolkata"))
-        page_title = f"Meeting Minutes - {ist_time.strftime('%Y-%m-%d %H:%M %Z')}"
+        # --- CHANGE 1: Hardcoded IST Timestamp ---
+        # Get the current time in UTC and manually add 5 hours and 30 minutes
+        ist_time = datetime.utcnow() + timedelta(hours=5, minutes=30)
+        page_title = f"Meeting Minutes - {ist_time.strftime('%Y-%m-%d %H:%M')} IST"
         
         children = []
         
@@ -142,7 +144,9 @@ class NotionService:
                 task_text = f"{item.task} (Owner: {owners}, Deadline: {item.deadline or 'N/A'})"
                 children.append({"to_do": {"rich_text": [{"text": {"content": task_text}}], "checked": False}})
         
-        notion.pages.create(
+        # --- CHANGE 2: Return the API Response ---
+        # This sends the new page's data (including its URL) back to the endpoint.
+        return notion.pages.create(
             parent={"database_id": settings.notion_database_id},
             properties={"title": {"title": [{"text": {"content": page_title}}]}},
             children=children
@@ -171,10 +175,12 @@ async def process_meeting(file: UploadFile = File(...)):
 
 @app.post("/export-to-notion")
 async def export_to_notion(data: FinalMinutes):
-    """Receives user-edited minutes and exports them to Notion."""
+    """Receives user-edited minutes and exports them, returning the new page URL."""
     try:
-        notion_service.export_minutes(data)
-        return {"status": "success", "message": "Successfully exported to Notion!"}
+        # The notion_service.export_minutes function needs to return the response
+        response = notion_service.export_minutes(data)
+        # We extract the URL from the response and send it back to the frontend
+        return {"status": "success", "message": "Successfully exported to Notion!", "url": response.get("url")}
     except Exception as e:
         print(f"ERROR in /export-to-notion: {e}")
         raise HTTPException(status_code=500, detail="Failed to export to Notion.")
