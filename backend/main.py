@@ -123,6 +123,12 @@ notion_service = NotionService()
 
 # --- 6. API Endpoints ---
 # ... (All endpoints are unchanged)
+@app.get("/")
+async def health_check():
+    """Provides a simple 200 OK response for the hosting service to check."""
+    return {"status": "ok", "message": "Momentum AI Backend is running."}
+
+
 @app.post("/process-meeting", response_model=ProcessOutput)
 async def process_meeting(file: UploadFile = File(...)):
     try:
