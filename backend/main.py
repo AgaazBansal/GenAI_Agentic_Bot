@@ -119,14 +119,12 @@ class NotionService:
         if not settings.notion_database_id:
             raise ValueError("Notion Database ID not configured.")
         
-        # --- THIS IS THE CORRECTED PART ---
-        # Get the current time in UTC, then convert it to the IST timezone
+        # This is the new timezone-aware logic
         ist_time = datetime.now(ZoneInfo("UTC")).astimezone(ZoneInfo("Asia/Kolkata"))
-        page_title = f"Meeting Minutes - {ist_time.strftime('%Y-%m-%d %H:%M %Z')}" # Added %Z for timezone
+        page_title = f"Meeting Minutes - {ist_time.strftime('%Y-%m-%d %H:%M %Z')}"
         
         children = []
         
-        # Build the content blocks for the Notion page
         children.append({"heading_2": {"rich_text": [{"text": {"content": "Key Info"}}]}})
         children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Overall Sentiment: {data.overall_sentiment}"}}]}})
         children.append({"bulleted_list_item": {"rich_text": [{"text": {"content": f"Topics: {', '.join(data.topics)}"}}]}})
@@ -173,8 +171,13 @@ async def process_meeting(file: UploadFile = File(...)):
 
 @app.post("/export-to-notion")
 async def export_to_notion(data: FinalMinutes):
-    try: notion_service.export_minutes(data); return {"status": "success", "message": "Successfully exported!"}
-    except Exception as e: raise HTTPException(status_code=500, detail="Failed to export to Notion.")
+    """Receives user-edited minutes and exports them to Notion."""
+    try:
+        notion_service.export_minutes(data)
+        return {"status": "success", "message": "Successfully exported to Notion!"}
+    except Exception as e:
+        print(f"ERROR in /export-to-notion: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export to Notion.")
 
 @app.post("/chat")
 async def chat_with_transcript(data: ChatInput):
