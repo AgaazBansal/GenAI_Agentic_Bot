@@ -6,3 +6,6 @@ venv/
 
 # Python cache
 __pycache__/
+
+# Ignore Google client secret file
+client_secret.json
