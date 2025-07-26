@@ -20,7 +20,8 @@ function App() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [statusMessage, setStatusMessage] = useState('');
     const [isExporting, setIsExporting] = useState(false);
-    const [notionStatus, setNotionStatus] = useState('');
+    const [notionMessage, setNotionMessage] = useState('');
+    const [notionUrl, setNotionUrl] = useState('');
     const fileInputRef = useRef(null);
 
     // RAG Chat state
@@ -76,28 +77,27 @@ function App() {
     };
 
     const handleNotionExport = async () => {
-        setIsExporting(true); setNotionStatus('Exporting...');
-        try {
-          // Capture the response from the backend
+      setIsExporting(true);
+      setNotionMessage('Exporting...'); // Use the new state variable
+      setNotionUrl(''); // Clear any previous URL
+  
+      try {
           const response = await axios.post(`${API_URL}/export-to-notion`, {
               overall_sentiment: overallSentiment,
               topics: topics,
               discussion_points: discussionPoints,
               action_items: actionItems
           });
-          // Create a clickable link in the success message
-          setNotionStatus(
-            <span>✅ Successfully exported! <a href={response.data.url} target="_blank" rel="noopener noreferrer">View in Notion</a></span>
-          );
+          // Set the message and URL from the response
+          setNotionMessage('✅ Successfully exported!');
+          setNotionUrl(response.data.url);
       } catch (err) {
-          setNotionStatus('❌ Error exporting.');
+          setNotionMessage('❌ Error exporting.');
       }
       setIsExporting(false);
     };
 
     
-    
-
     const handleChatSubmit = async (e) => {
         e.preventDefault(); if (!userQuestion.trim()) return;
         const question = userQuestion; const newHistory = [...chatHistory, { role: 'user', content: question }];
@@ -161,7 +161,15 @@ function App() {
                                         <h2>Meeting Minutes Draft</h2>
                                         <button onClick={handleNotionExport} disabled={isExporting} className="export-button">{isExporting ? 'Exporting...' : 'Confirm & Export to Notion'}</button>
                                     </div>
-                                    {notionStatus && <p className="notion-status">{notionStatus}</p>}
+                                    {notionStatus && (
+                                      <p className="notion-status">
+                                          {notionMessage}
+                                          {notionUrl && (
+                                            <a href = {notionUrl} target="_blank" rel="noopener noreferrer"> View in Notion</a>
+                                          )}
+                                      </p>
+                                    )}
+                                    
 
                                     <div className="metadata-container">
                                         <div className="sentiment-display"><strong>Overall Sentiment:</strong> {overallSentiment}</div>
