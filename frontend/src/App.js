@@ -79,8 +79,20 @@ function App() {
 
     const handleNotionExport = async () => {
       setIsExporting(true);
-      setNotionMessage('Exporting...'); // Use the new state variable
-      setNotionUrl(''); // Clear any previous URL
+      setNotionMessage('Exporting...');
+      setNotionUrl('');
+      try {
+          const response = await axios.post(`${API_URL}/export-to-notion`, {
+              overall_sentiment: overallSentiment, topics: topics,
+              discussion_points: discussionPoints, action_items: actionItems
+          });
+          setNotionMessage('✅ Successfully exported!');
+          setNotionUrl(response.data.url); // Set the URL from the response
+      } catch (err) {
+          setNotionMessage('❌ Error exporting.');
+      }
+      setIsExporting(false);
+  };
   
       try {
           const response = await axios.post(`${API_URL}/export-to-notion`, {
