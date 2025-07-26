@@ -1,4 +1,4 @@
- # Virtual Environment
+# Virtual Environment
 venv/
 
 # Environment variables
@@ -8,6 +8,4 @@ venv/
 __pycache__/
 
 # Ignore Google client secret file
-
-# Revoked the exposed secret key permanently and removed it from the code!
 client_secret.json
