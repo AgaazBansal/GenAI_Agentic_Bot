@@ -4,6 +4,8 @@ import './App.css';
 
 let nextId = 1000; // Start manual IDs high to avoid collisions
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+console.log("Connecting to API at:", API_URL); // <-- ADD THIS LINE
+
 
 function App() {
     // State for rich minutes
