@@ -13,6 +13,7 @@ function App() {
     const [actionItems, setActionItems] = useState([]);
     const [overallSentiment, setOverallSentiment] = useState('');
     const [topics, setTopics] = useState([]);
+    const [notionStatus, setNotionStatus] = useState('');
 
     // General state
     const [isLoading, setIsLoading] = useState(false);
