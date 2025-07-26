@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 
 let nextId = 1000; // Start manual IDs high to avoid collisions
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 function App() {
     // State for rich minutes
@@ -51,7 +52,7 @@ function App() {
 
         try {
             // THE FIX IS HERE: We must pass 'formData' as the second argument
-            const response = await axios.post('http://localhost:8000/process-meeting', formData, { 
+            const response = await axios.post('API_URL/process-meeting', formData, { 
                 headers: { 'Content-Type': 'multipart/form-data' } 
             });
             setDiscussionPoints(response.data.discussion_points); 
@@ -75,7 +76,7 @@ function App() {
     const handleNotionExport = async () => {
         setIsExporting(true); setNotionStatus('Exporting...');
         try {
-            await axios.post('http://localhost:8000/export-to-notion', {
+            await axios.post('API_URL/export-to-notion', {
                 overall_sentiment: overallSentiment, topics: topics,
                 discussion_points: discussionPoints, action_items: actionItems
             });
@@ -89,7 +90,7 @@ function App() {
         const question = userQuestion; const newHistory = [...chatHistory, { role: 'user', content: question }];
         setChatHistory(newHistory); setUserQuestion(''); setIsChatting(true);
         try {
-            const response = await axios.post('http://localhost:8000/chat', { question: question, transcript: fullTranscript });
+            const response = await axios.post('API_URL/chat', { question: question, transcript: fullTranscript });
             setChatHistory([...newHistory, { role: 'bot', content: response.data.answer }]);
         } catch (err) { setChatHistory([...newHistory, { role: 'bot', content: 'Sorry, I encountered an error.' }]); }
         setIsChatting(false);
