@@ -167,7 +167,12 @@ notion_service = NotionService()
 @app.get("/")
 async def health_check():
     """Provides a simple 200 OK response for the hosting service to check."""
-    return {"status": "ok", "message": "Momentum AI Backend is running."}
+    return {"status": "ok", "message": "Momentum AI Backend is running.", "cors_enabled": True}
+
+@app.get("/test-cors")
+async def test_cors():
+    """Test endpoint to verify CORS is working."""
+    return {"message": "CORS is working!", "timestamp": datetime.now().isoformat()}
 
 
 @app.post("/process-meeting", response_model=ProcessOutput)
