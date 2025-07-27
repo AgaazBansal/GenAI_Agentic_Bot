@@ -42,9 +42,20 @@ function App() {
     }, [chatHistory]);
 
     const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
+        const file = event.target.files[0];
+        if (file) {
+            // Check file size (20MB = 20 * 1024 * 1024 bytes)
+            const MAX_FILE_SIZE = 20 * 1024 * 1024;
+            if (file.size > MAX_FILE_SIZE) {
+                setError(`File too large! Maximum size is 20MB. Your file size: ${(file.size / (1024 * 1024)).toFixed(1)}MB`);
+                setSelectedFile(null);
+                return;
+            }
+            setError(''); // Clear any previous errors
+        }
+        setSelectedFile(file);
         setDiscussionPoints([]); setActionItems([]); setOverallSentiment(''); setTopics([]);
-        setChatHistory([]); setFullTranscript(''); setStatusMessage(''); setError(''); setNotionStatus('');
+        setChatHistory([]); setFullTranscript(''); setStatusMessage(''); setNotionStatus('');
         setShowAddForm(null);
     };
 
@@ -66,7 +77,16 @@ function App() {
             setFullTranscript(response.data.transcript); 
             setStatusMessage('Meeting processed successfully!');
         } catch (err) { 
-            setError('An error occurred. Check the backend console.'); 
+            if (err.response && err.response.status === 413) {
+                // File too large error
+                setError(`File too large! ${err.response.data.detail || 'Maximum file size is 20MB.'}`);
+            } else if (err.response && err.response.data && err.response.data.detail) {
+                // Other specific backend errors
+                setError(err.response.data.detail);
+            } else {
+                // Generic error
+                setError('An error occurred while processing your file. Please try again.');
+            }
             setStatusMessage(''); 
         }
         setIsLoading(false);
