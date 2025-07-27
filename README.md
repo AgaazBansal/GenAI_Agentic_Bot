@@ -8,9 +8,15 @@ Momentum AI is an intelligent agent designed to transform chaotic meeting audio 
 
 This project is a submission for the **Flipr Hackathon 28.2 - Gen AI: Agentic Bots**.
 
-## 🔴 Live Demo (Note: The maximum acceptable file size is 25MB)
+## 🔴 Live Demo
 
 **https://momentum-ai-phi.vercel.app/**
+
+> **⚠️ Important Notes:**
+> - **Maximum file size: 20MB** (MP3, MP4, WAV, M4A formats supported)
+> - **For best experience:** Use incognito/private browsing mode (helps avoid caching issues)
+> - **Frontend:** Deployed on Vercel
+> - **Backend:** Deployed on Render
 
 ---
 
@@ -47,8 +53,8 @@ Momentum AI is packed with advanced, agentic features designed to turn every mee
 
 | Component            | Technology                                                          |
 | -------------------- | ------------------------------------------------------------------- |
-| **Frontend** | React.js                                                            |
-| **Backend** | Python (FastAPI)                                                    |
+| **Frontend** | React.js (Deployed on Vercel)                                       |
+| **Backend** | Python (FastAPI) (Deployed on Render)                               |
 | **LLM & Transcription** | Groq Cloud (Llama3, Whisper)                                     |
 | **External APIs** | Notion API                                                          |
 
