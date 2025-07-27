@@ -78,36 +78,22 @@ function App() {
     };
 
     const handleNotionExport = async () => {
-      setIsExporting(true);
-      setNotionMessage('Exporting...');
-      setNotionUrl('');
-      try {
-          const response = await axios.post(`${API_URL}/export-to-notion`, {
-              overall_sentiment: overallSentiment, topics: topics,
-              discussion_points: discussionPoints, action_items: actionItems
-          });
-          setNotionMessage('✅ Successfully exported!');
-          setNotionUrl(response.data.url); // Set the URL from the response
-      } catch (err) {
-          setNotionMessage('❌ Error exporting.');
-      }
-      setIsExporting(false);
-  };
-  
-      try {
-          const response = await axios.post(`${API_URL}/export-to-notion`, {
-              overall_sentiment: overallSentiment,
-              topics: topics,
-              discussion_points: discussionPoints,
-              action_items: actionItems
-          });
-          // Set the message and URL from the response
-          setNotionMessage('✅ Successfully exported!');
-          setNotionUrl(response.data.url);
-      } catch (err) {
-          setNotionMessage('❌ Error exporting.');
-      }
-      setIsExporting(false);
+        setIsExporting(true);
+        setNotionMessage('Exporting...');
+        setNotionUrl('');
+        try {
+            const response = await axios.post(`${API_URL}/export-to-notion`, {
+                overall_sentiment: overallSentiment,
+                topics: topics,
+                discussion_points: discussionPoints,
+                action_items: actionItems
+            });
+            setNotionMessage('✅ Successfully exported!');
+            setNotionUrl(response.data.url); // Set the URL from the response
+        } catch (err) {
+            setNotionMessage('❌ Error exporting.');
+        }
+        setIsExporting(false);
     };
 
     
@@ -174,18 +160,18 @@ function App() {
                                         <h2>Meeting Minutes Draft</h2>
                                         <button onClick={handleNotionExport} disabled={isExporting} className="export-button">{isExporting ? 'Exporting...' : 'Confirm & Export to Notion'}</button>
                                     </div>
-                                    {notionStatus && (
+                                    {notionMessage && (
                                       <p className="notion-status">
                                           {notionMessage}
                                           {notionUrl && (
-                                            <a href = {notionUrl} target="_blank" rel="noopener noreferrer"> View in Notion</a>
+                                            <a href={notionUrl} target="_blank" rel="noopener noreferrer"> View in Notion</a>
                                           )}
                                       </p>
                                     )}
                                     
 
                                     <div className="metadata-container">
-                                        <div className="sentiment-display"><strong>Overall Sentiment:</strong> {overallSentiment}</div>
+                                        <div className="sentiment-display"><strong>Overall Sentiment:</strong> {overallSentiment.toUpperCase()}</div>
                                         <div className="topics-display"><strong>Topics:</strong>{topics.map((topic, i) => <span key={i} className="topic-tag">{topic}</span>)}</div>
                                     </div>
 
