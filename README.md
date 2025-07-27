@@ -6,11 +6,11 @@
 
 Momentum AI is an intelligent agent designed to transform chaotic meeting audio into structured, editable, and actionable minutes instantly. This tool acts as a co-pilot for modern teams, doing the heavy lifting of note-taking and summarization while giving the user complete editorial control before finalizing the record.
 
-This project is a submission for the **GenAI Agentic Bot Hackathon: Meeting Productivity Unleashed**.
+This project is a submission for the **Flipr Hackathon 28.2 - Gen AI: Agentic Bots**.
 
-## 🔴 Live Demo
+## 🔴 Live Demo (Note: The maximum acceptable file size is 25MB)
 
-**[INSERT YOUR DEPLOYED APP LINK HERE]**
+**https://momentum-ai-phi.vercel.app/**
 
 ---
 
