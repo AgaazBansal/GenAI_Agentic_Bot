@@ -29,7 +29,7 @@ notion = notion_client.Client(auth=settings.notion_api_key)
 
 # --- 2. Middleware ---
 # --- 2. Middleware ---
-CORS_ORIGIN_REGEX = r"http://localhost:3000|https://.*--agaazs-projects\.vercel\.app|https://momentum-ai-tutorial\.vercel\.app"
+CORS_ORIGIN_REGEX = r"http://localhost:3000|https://.*--agaazs-projects\.vercel\.app|https://momentum-ai-tutorial\.vercel\.app|https://momentum-ai-phi\.vercel\.app"
 
 app.add_middleware(
     CORSMiddleware,
