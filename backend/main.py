@@ -33,7 +33,7 @@ CORS_ORIGIN_REGEX = r"http://localhost:3000|https://.*--agaazs-projects\.vercel\
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=CORS_ORIGIN_REGEX, # Use regex instead of a static list
+    allow_origins=["*"],  # Allow all origins temporarily
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
