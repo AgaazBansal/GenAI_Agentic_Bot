@@ -164,11 +164,27 @@ async def health_check():
 
 @app.post("/process-meeting", response_model=ProcessOutput)
 async def process_meeting(file: UploadFile = File(...)):
+    # Check file size (20MB = 20 * 1024 * 1024 bytes)
+    MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB in bytes
+    
     try:
+        # Read file content to check size
+        file_content = await file.read()
+        if len(file_content) > MAX_FILE_SIZE:
+            raise HTTPException(
+                status_code=413, 
+                detail=f"File too large. Maximum size allowed is 20MB. Your file size: {len(file_content) / (1024 * 1024):.1f}MB"
+            )
+        
+        # Reset file pointer for processing
+        file.file.seek(0)
+        
         transcription_text = groq_client.audio.transcriptions.create(file=(file.filename, file.file.read()), model=settings.transcription_model).text
         summary_json = ai_service.get_summary_from_transcript(transcription_text)
         summary_json['transcript'] = transcription_text
         return ProcessOutput(**summary_json)
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"ERROR in /process-meeting: {e}")
         raise HTTPException(status_code=500, detail="An internal error occurred during processing.")
